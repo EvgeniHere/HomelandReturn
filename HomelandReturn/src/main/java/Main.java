@@ -18,22 +18,6 @@ public class Main {
     static boolean loading = true;
     
     public static void main(String[] args) {
-        Timer timer1 = new Timer();
-        timer1.schedule(new TimerTask(){
-            @Override
-            public void run() {
-                Player.setup();
-            }
-        }, 10);
-        
-        Timer timer2 = new Timer();
-        timer2.schedule(new TimerTask(){
-            @Override
-            public void run() {
-                World.setup();
-            }
-        }, 10);
-        
         Timer timer3 = new Timer();
         timer3.schedule(new TimerTask(){
             @Override

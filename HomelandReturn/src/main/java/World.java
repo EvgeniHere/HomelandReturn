@@ -25,19 +25,23 @@ public class World {
     
     static boolean loaded;
     
-    static Point middlePoint;
-    static Point lastFallingMiddlePoint;
+    static Point movePoint;
     
     public static void setup() {
-        obstacles.add(new Obstacle(0, MainFrame.HEIGHT - MainFrame.HEIGHT / 15, MainFrame.WIDTH, 500));
+        //obstacles.add(new Obstacle(0, GameFrame.HEIGHT - GameFrame.HEIGHT / 15, GameFrame.WIDTH, 500));
+        
         while (!Player.loaded) {
             System.out.print("");
         }
-        middlePoint = new Point(0, (int) Player.pos.y);
-        lastFallingMiddlePoint = new Point(0, (int) Player.pos.y);
-        for (int i = 0; i < 10; i++) {
+        
+        movePoint = new Point(0, 0);
+        
+        /*for (int i = 0; i < 10; i++) {
             obstacles.add(new Obstacle(i * 100, middlePoint.y + 100, 50, 50));
-        }
+        }*/
+        
+        obstacles = Generator.dataToList(Generator.LOADCODE(), 2);
+        
         dir = 0;
         gravity = 0.06;
         loaded = true;
@@ -47,17 +51,17 @@ public class World {
     
     public static void move() {
         if (!isSideObstacleAt(dir)) {
-            middlePoint.x -= dir;
+            movePoint.x -= dir;
         }
-        if (middlePoint.y < -2000) {
-            middlePoint.y = 0;
+        if (movePoint.y < -2000) {
+            movePoint.y = 2000;
         }
     }
     
     public static void jump() {
         if (isGroundCeilingObstacleAt(5)) {
             Player.desireToJump = true;
-            velY -= 7.0;
+            velY -= 6.0;
             Timer timer = new Timer();
             timer.schedule(new TimerTask(){
                 @Override
@@ -73,16 +77,15 @@ public class World {
             g.fillRect((int) obstacles.get(i).x, (int) obstacles.get(i).y, obstacles.get(i).width, obstacles.get(i).height);
         }
         g.setColor(Color.RED);
-        g.fillRect(middlePoint.x-5, middlePoint.y-5, 10, 10);
+        g.fillRect(movePoint.x-5, movePoint.y-5, 10, 10);
         g.setColor(Color.BLACK);
     }
     
     public static void addGravity() {
         if (isGroundCeilingObstacleAt(-1)) {
             velY = 0;
-            middlePoint.y -= 1;
+            movePoint.y -= 1;
         }
-        
         
         if (isGroundCeilingObstacleAt(1)) {
             if (!Player.desireToJump) {
@@ -90,40 +93,44 @@ public class World {
             }
         } 
         if (!isGroundCeilingObstacleAt(2)) {
-            velY += gravity;
+            if (velY < 2) {
+                velY += gravity;
+            }
         }
-        middlePoint.y -= velY;
+        movePoint.y -= velY;
     }
     
     public static void startTimer() {
-        new Timer().schedule(new TimerTask(){
+        new Timer().scheduleAtFixedRate(new TimerTask(){
             @Override
             public void run() {
                 updatePositions();
             }
         }, 9, 2);
 
-        new Timer().schedule(new TimerTask(){
-            @Override
-            public void run() {
-                addGravity();
-            }
-        }, 9, 2);
+        //for (int i = 0; i < 3; i++) {
+            new Timer().scheduleAtFixedRate(new TimerTask(){
+                @Override
+                public void run() {
+                    addGravity();
+                }
+            }, 9, 6);
+        //}
 
-        for (int i = 0; i < 3; i++) {
-            new Timer().schedule(new TimerTask(){
+        //for (int i = 0; i < 3; i++) {
+            new Timer().scheduleAtFixedRate(new TimerTask(){
                 @Override
                 public void run() {
                     move();
                 }
-            }, 9, 2);
-        }
+            }, 9, 6);
+        //}
     }
     
     public static void updatePositions() {
         for (int i = 0; i < obstacles.size(); i++) {
-            obstacles.get(i).y = middlePoint.y + obstacles.get(i).distFromMiddleY;
-            obstacles.get(i).x = middlePoint.x + obstacles.get(i).distFromMiddleX;
+            obstacles.get(i).y = movePoint.y + obstacles.get(i).distFromMiddleY;
+            obstacles.get(i).x = movePoint.x + obstacles.get(i).distFromMiddleX;
         }
     }
     

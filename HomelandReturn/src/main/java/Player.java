@@ -26,6 +26,7 @@ public class Player {
     static boolean desireToJump = false;
     static Obstacle curObstacleGround;
     static BufferedImage character;
+    static int speed = 2;
     
     //Movement
     static int dir;
@@ -37,9 +38,9 @@ public class Player {
     static boolean loaded = false;
     
     public static void setup() {
-        size = new Point(MainFrame.WIDTH/25, 0);
+        size = new Point(GameFrame.WIDTH/25, 0);
         size.y = (int) ((double) (size.x));
-        pos = new FloatPoint(MainFrame.WIDTH/2 - size.x/2, 700);
+        pos = new FloatPoint(GameFrame.WIDTH/2 - size.x/2, 700);
         dir = 0;
         velX = 0;
         velY = 0;

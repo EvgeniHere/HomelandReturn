@@ -18,7 +18,7 @@ import java.util.TimerTask;
  *
  * @author evgen
  */
-public class MainPanel extends javax.swing.JPanel implements KeyListener {
+public class GamePanel extends javax.swing.JPanel implements KeyListener {
 
     /**
      * Creates new form MainPanel
@@ -26,7 +26,7 @@ public class MainPanel extends javax.swing.JPanel implements KeyListener {
     
     static int tmpX = 0; static int tmpY = 0; static double a = 0; static int radius = 25; static double d = 0; static double a2 = 0; static double d2 = 0;
     
-    public MainPanel() {
+    public GamePanel() {
         initComponents();
         setBackground(Color.WHITE);
         addKeyListener(this);
@@ -86,10 +86,10 @@ public class MainPanel extends javax.swing.JPanel implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_A) {
-            World.dir = -1;
+            World.dir = -Player.speed;
         }
         if (e.getKeyCode() == KeyEvent.VK_D) {
-            World.dir = 1;
+            World.dir = Player.speed;
         }
         if (e.getKeyCode() == KeyEvent.VK_W) {
             World.jump();
