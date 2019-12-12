@@ -63,7 +63,7 @@ public class Player {
     }
     
     public static void paintComponent(Graphics g) {
-        //g.drawRect((int) pos.x, (int) pos.y, size.x, size.y);
+        //g.drawRect((int) pos.x, (int) pos.y, size.x, size.y); //Hitbox
         g.drawImage(character, (int) pos.x, (int) pos.y, size.x, size.y, null);
     }
 }

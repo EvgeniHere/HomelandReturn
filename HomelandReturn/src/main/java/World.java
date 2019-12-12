@@ -96,30 +96,28 @@ public class World {
     }
     
     public static void startTimer() {
-        //for (int i = 0; i < 6; i++) {
-            new Timer().schedule(new TimerTask(){
-                @Override
-                public void run() {
-                    updatePositions();
-                }
-            }, 9, 2);
-            
-            new Timer().schedule(new TimerTask(){
-                @Override
-                public void run() {
-                    addGravity();
-                }
-            }, 9, 2);
-            
-            for (int i = 0; i < 3; i++) {
-                new Timer().schedule(new TimerTask(){
-                    @Override
-                    public void run() {
-                        move();
-                    }
-                }, 9, 2);
+        new Timer().schedule(new TimerTask(){
+            @Override
+            public void run() {
+                updatePositions();
             }
-        //}
+        }, 9, 2);
+
+        new Timer().schedule(new TimerTask(){
+            @Override
+            public void run() {
+                addGravity();
+            }
+        }, 9, 2);
+
+        for (int i = 0; i < 3; i++) {
+            new Timer().schedule(new TimerTask(){
+                @Override
+                public void run() {
+                    move();
+                }
+            }, 9, 2);
+        }
     }
     
     public static void updatePositions() {
