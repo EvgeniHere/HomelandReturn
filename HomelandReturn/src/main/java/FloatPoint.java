@@ -25,6 +25,7 @@ public class FloatPoint {
     
     public void addX(float x) {
         this.x += x;
+        System.out.print("");
     }
     
     public void addY(float y) {
