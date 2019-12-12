@@ -78,13 +78,18 @@ public class World {
     }
     
     public static void addGravity() {
-        if (isGroundCeilingObstacleAt(2)) {
+        if (isGroundCeilingObstacleAt(-1)) {
+            velY = 0;
+            middlePoint.y -= 1;
+        }
+        
+        
+        if (isGroundCeilingObstacleAt(1)) {
             if (!Player.desireToJump) {
                 velY = 0;
-                middlePoint.y = lastFallingMiddlePoint.y;
             }
-        } else {
-            lastFallingMiddlePoint.y = middlePoint.y + 1;
+        } 
+        if (!isGroundCeilingObstacleAt(2)) {
             velY += gravity;
         }
         middlePoint.y -= velY;
