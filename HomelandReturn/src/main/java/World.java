@@ -22,6 +22,7 @@ public class World {
     static int dir;
     static double gravity;
     static double velY;
+    static double velX;
     
     static boolean loaded;
     
@@ -34,13 +35,17 @@ public class World {
             System.out.print("");
         }
         
-        movePoint = new Point(0, 0);
-        
         /*for (int i = 0; i < 10; i++) {
             obstacles.add(new Obstacle(i * 100, middlePoint.y + 100, 50, 50));
         }*/
         
-        obstacles = Generator.dataToList(Generator.LOADCODE(), 2);
+        obstacles = Generator.getLoadedObstacles(2);
+        
+        movePoint = new Point(Generator.getLoadedPlayerPos(2));
+        movePoint.x *= -1;
+        movePoint.y *= -1;
+        movePoint.x += Player.pos.x;
+        movePoint.y += Player.pos.y;
         
         dir = 0;
         gravity = 0.06;
@@ -50,12 +55,16 @@ public class World {
     }
     
     public static void move() {
-        if (!isSideObstacleAt(dir)) {
-            movePoint.x -= dir;
+        if (!isSideObstacleAt((int) velX + dir)) {
+            if (Math.abs(velX) < 2) {
+                velX += dir * Player.speed;
+            }
+            movePoint.x -= velX;
         }
         if (movePoint.y < -2000) {
             movePoint.y = 2000;
         }
+        System.out.println(movePoint.x + "; " + movePoint.y);
     }
     
     public static void jump() {
@@ -90,6 +99,7 @@ public class World {
         if (isGroundCeilingObstacleAt(1)) {
             if (!Player.desireToJump) {
                 velY = 0;
+                movePoint.y += 1;
             }
         } 
         if (!isGroundCeilingObstacleAt(2)) {
@@ -106,25 +116,21 @@ public class World {
             public void run() {
                 updatePositions();
             }
-        }, 9, 2);
-
-        //for (int i = 0; i < 3; i++) {
-            new Timer().scheduleAtFixedRate(new TimerTask(){
-                @Override
-                public void run() {
-                    addGravity();
-                }
-            }, 9, 6);
-        //}
-
-        //for (int i = 0; i < 3; i++) {
-            new Timer().scheduleAtFixedRate(new TimerTask(){
-                @Override
-                public void run() {
-                    move();
-                }
-            }, 9, 6);
-        //}
+        }, 9, 1);
+            
+        new Timer().scheduleAtFixedRate(new TimerTask(){
+            @Override
+            public void run() {
+                addGravity();
+            }
+        }, 9, 6);
+        
+        new Timer().scheduleAtFixedRate(new TimerTask(){
+            @Override
+            public void run() {
+                move();
+            }
+        }, 9, 4);
     }
     
     public static void updatePositions() {

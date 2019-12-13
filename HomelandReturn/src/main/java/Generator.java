@@ -1,4 +1,5 @@
 
+import java.awt.Point;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,6 +20,9 @@ import java.util.logging.Logger;
  * @author evgen
  */
 public class Generator {
+    
+    static ArrayList<Obstacle> loadingObstacles;
+    static Point loadingPlayerPos;
     
     public static void GENCODE(String code) {
         BufferedWriter writer = null;
@@ -49,37 +53,79 @@ public class Generator {
         return content;
     }
     
-    public static ArrayList<Obstacle> dataToList(String data, int modifier) {
-        ArrayList<Obstacle> loadingObstacles = new ArrayList<>();
+    public static void processData() {
         String code = Generator.LOADCODE();
+        
+        loadingObstacles = new ArrayList<>();
+        
+        String curObject = "";
         for (int i = 0; i + 1 < code.length(); i++) {
+            if ((((int) code.charAt(i) >= (int) 'a' && (int) code.charAt(i) <= (int) 'z')
+                    || ((int) code.charAt(i) >= (int) 'A' && (int) code.charAt(i) <= (int) 'Z'))) {
+                curObject = "";
+                while ((((int) code.charAt(i) >= (int) 'a' && (int) code.charAt(i) <= (int) 'z')
+                        || ((int) code.charAt(i) >= (int) 'A' && (int) code.charAt(i) <= (int) 'Z'))) {
+                    curObject += code.charAt(i);
+                    i++;
+                }
+            }
             if (code.charAt(i) == ';') {
                 i++;
             }
-            int[] info = new int[4];
+            int length = 0;
+            if (curObject.equals("obstacles")) {
+                length = 4;
+            } else if (curObject.equals("playerPos")) {
+                length = 2;
+            }
+            int[] info = new int[length];
             for (int j = 0; j < info.length; j++) {
                 String num = "";
-                while (code.charAt(i) != ',' && code.charAt(i) != ';') {
+                while ((int) code.charAt(i) >= (int) '0' && (int) code.charAt(i) <= (int) '9') {
                     num += code.charAt(i);
                     i++;
                 }
                 if (code.charAt(i) == ',') {
                     i++;
                 }
-                info[j] = (int) Double.parseDouble(num) * modifier;
+                info[j] = (int) Integer.parseInt(num);
             }
-            loadingObstacles.add(new Obstacle(info[0], info[1], info[2], info[3]));
+            if (curObject.equals("obstacles")) {
+                loadingObstacles.add(new Obstacle(info[0], info[1], info[2], info[3]));
+            } else if (curObject.equals("playerPos")) {
+                loadingPlayerPos = new Point(info[0], info[1]);
+            }
+        }
+    }
+    
+    public static Point getLoadedPlayerPos(int modifier) {
+        loadingPlayerPos.x *= modifier;
+        loadingPlayerPos.y *= modifier;
+        return loadingPlayerPos;
+    }
+    
+    public static ArrayList<Obstacle> getLoadedObstacles(int modifier) {
+        if (loadingObstacles == null) {
+            processData();
+        }
+        for (int i = 0; i < loadingObstacles.size(); i++) {
+            loadingObstacles.set(i, new Obstacle(loadingObstacles.get(i).x * modifier, loadingObstacles.get(i).y * modifier, loadingObstacles.get(i).width * modifier, loadingObstacles.get(i).height * modifier));
         }
         return loadingObstacles;
     }
     
-    public static String listToData(ArrayList<Obstacle> obs) {
-        String info = "";
+    public static String mapToData(ArrayList<Obstacle> obs, Point playerPos) {
+        String info = "obstacles";
         for (int i = 0; i < obs.size(); i++) {
             Obstacle curObs = obs.get(i);
-            info += ";" + curObs.x + "," + curObs.y + "," + curObs.width + "," + curObs.height;
+            info += ";" + (int) curObs.x + "," + (int) curObs.y + "," + (int) curObs.width + "," + (int) curObs.height;
         }
         info += ";";
+        if (playerPos != null) {
+            info += "playerPos;" + (int) playerPos.x + "," + (int) playerPos.y + ";";
+        } else {
+            info += "playerPos;" + 0 + "," + 0 + ";";
+        }
         return info;
     }
 }

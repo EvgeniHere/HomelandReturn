@@ -15,7 +15,7 @@ public class SelectionFrame extends javax.swing.JFrame {
      * Creates new form SelectionFrame
      */
     
-    Obstacle obstacle = new Obstacle(0, 0, 50, 50);
+    String selected;
     
     public SelectionFrame() {
         initComponents();
@@ -114,22 +114,23 @@ public class SelectionFrame extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         //Obstacle-Button
-        MapGeneratorPanel.setSelectedObstacle(obstacle);
+        MapGeneratorPanel.setSelected("obstacle");
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         //Save Map-Button
-        Generator.GENCODE(Generator.listToData(MapGeneratorPanel.obstaclesOnMap));
+        Generator.GENCODE(Generator.mapToData(MapGeneratorPanel.obstaclesOnMap, MapGeneratorPanel.playerPos));
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         //Load Map-Button
-        MapGeneratorPanel.setObstacles(Generator.dataToList(Generator.LOADCODE(), 1));
+        Generator.processData();
+        MapGeneratorPanel.setObstacles(Generator.getLoadedObstacles(1));
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         //Player Position-Button
-        
+        MapGeneratorPanel.setSelected("player");
     }//GEN-LAST:event_jButton5ActionPerformed
 
     /**

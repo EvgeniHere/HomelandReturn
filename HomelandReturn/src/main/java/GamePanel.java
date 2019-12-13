@@ -86,10 +86,10 @@ public class GamePanel extends javax.swing.JPanel implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_A) {
-            World.dir = -Player.speed;
+            World.dir = -1;
         }
         if (e.getKeyCode() == KeyEvent.VK_D) {
-            World.dir = Player.speed;
+            World.dir = 1;
         }
         if (e.getKeyCode() == KeyEvent.VK_W) {
             World.jump();
@@ -100,11 +100,12 @@ public class GamePanel extends javax.swing.JPanel implements KeyListener {
     public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_D) {
             World.dir = 0;
+            World.velX = 0;
         }
     }
 
     public void startTimer() {
-        new Timer().schedule(new TimerTask(){
+        new Timer().scheduleAtFixedRate(new TimerTask(){
             @Override
             public void run() {
                 requestFocus();

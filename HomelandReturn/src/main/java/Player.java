@@ -26,11 +26,10 @@ public class Player {
     static boolean desireToJump = false;
     static Obstacle curObstacleGround;
     static BufferedImage character;
-    static int speed = 2;
+    static double speed = 0.04;
     
     //Movement
     static int dir;
-    static float velX;
     
     //Gravity
     static float velY;
@@ -41,8 +40,6 @@ public class Player {
         size = new Point(GameFrame.WIDTH/25, 0);
         size.y = (int) ((double) (size.x));
         pos = new FloatPoint(GameFrame.WIDTH/2 - size.x/2, 700);
-        dir = 0;
-        velX = 0;
         velY = 0;
         loaded = true;
         isFalling = false;
@@ -65,6 +62,13 @@ public class Player {
     
     public static void paintComponent(Graphics g) {
         //g.drawRect((int) pos.x, (int) pos.y, size.x, size.y); //Hitbox
-        g.drawImage(character, (int) pos.x, (int) pos.y, size.x, size.y, null);
+        if (World.dir != 0) {
+            dir = World.dir;
+        }
+        if (dir < 0) {
+            g.drawImage(character, (int) pos.x + size.x, (int) pos.y, -size.x, size.y, null);
+        } else {
+            g.drawImage(character, (int) pos.x, (int) pos.y, size.x, size.y, null);
+        }
     }
 }

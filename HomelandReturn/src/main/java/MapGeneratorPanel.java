@@ -1,6 +1,7 @@
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -28,6 +29,8 @@ public class MapGeneratorPanel extends javax.swing.JPanel implements MouseMotion
     static int start_my;
     static Obstacle selectedObstacle;
     static ArrayList<Obstacle> obstaclesOnMap;
+    static Point playerPos;
+    static String selected;
     
     public MapGeneratorPanel() {
         initComponents();
@@ -57,10 +60,21 @@ public class MapGeneratorPanel extends javax.swing.JPanel implements MouseMotion
         if (selectedObstacle != null) {
             g.fillRect((int) selectedObstacle.x, (int) selectedObstacle.y, selectedObstacle.width, selectedObstacle.height);
         }
+        if (playerPos != null) {
+            g.setColor(Color.RED);
+            g.fillRect(playerPos.x, playerPos.y, 20, 20);
+        }
     }
     
-    public static void setSelectedObstacle(Obstacle obstacle) {
-        selectedObstacle = obstacle;
+    public static void setSelected(String selectedObject) {
+        selected = selectedObject;
+        if (selectedObject.equals("obstacle")) {
+            selectedObstacle = new Obstacle(0, 0, 50, 50);
+        } else if (selectedObject.equals("player")) {
+            if (playerPos == null) {
+                playerPos = new Point(0, 0);
+            }
+        }
     }
 
     /**
@@ -88,7 +102,7 @@ public class MapGeneratorPanel extends javax.swing.JPanel implements MouseMotion
     public void mouseDragged(MouseEvent e) {
         mx = e.getX();
         my = e.getY();
-        if (selectedObstacle != null) {
+        if (selectedObstacle != null && selected.equals("obstacle")) {
             selectedObstacle.width = mx - start_mx;
             selectedObstacle.height = my - start_my;
         }
@@ -106,7 +120,7 @@ public class MapGeneratorPanel extends javax.swing.JPanel implements MouseMotion
     public void mousePressed(MouseEvent e) {
         start_mx = e.getX();
         start_my = e.getY();
-        if (selectedObstacle != null) {
+        if (selectedObstacle != null && selected.equals("obstacle")) {
             selectedObstacle.x = start_mx;
             selectedObstacle.y = start_my;
         }
@@ -116,12 +130,14 @@ public class MapGeneratorPanel extends javax.swing.JPanel implements MouseMotion
     public void mouseReleased(MouseEvent e) {
         mx = e.getX();
         my = e.getY();
-        if (selectedObstacle != null) {
+        if (selectedObstacle != null && selected.equals("obstacle")) {
             selectedObstacle.width = mx - start_mx;
             selectedObstacle.height = my - start_my;
             obstaclesOnMap.add(new Obstacle(selectedObstacle.x, selectedObstacle.y, selectedObstacle.width, selectedObstacle.height));
             selectedObstacle.width = 0;
             selectedObstacle.height = 0;
+        } else if (selected.equals("player")) {
+            playerPos = new Point(mx, my);
         }
     }
 
