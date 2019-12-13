@@ -19,6 +19,7 @@ import java.util.TimerTask;
 public class World {
     
     static ArrayList<Obstacle> obstacles = new ArrayList<>();
+    static ArrayList<Jumppad> jumppads = new ArrayList<>();
     static int dir;
     static double gravity;
     static double velY;
@@ -40,6 +41,7 @@ public class World {
         }*/
         
         obstacles = Generator.getLoadedObstacles(2);
+        //jumppads = Generator.getLoadedJumppads(2);
         
         movePoint = new Point(Generator.getLoadedPlayerPos(2));
         movePoint.x *= -1;

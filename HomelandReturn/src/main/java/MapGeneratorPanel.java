@@ -31,6 +31,7 @@ public class MapGeneratorPanel extends javax.swing.JPanel implements MouseMotion
     static ArrayList<Obstacle> obstaclesOnMap;
     static Point playerPos;
     static String selected;
+    static Jumppad selectedJumppad;
     
     public MapGeneratorPanel() {
         initComponents();
@@ -41,6 +42,7 @@ public class MapGeneratorPanel extends javax.swing.JPanel implements MouseMotion
         mx = 0;
         my = 0;
         selectedObstacle = null;
+        selectedJumppad = null;
         obstaclesOnMap = new ArrayList<>();
     }
     
@@ -74,6 +76,8 @@ public class MapGeneratorPanel extends javax.swing.JPanel implements MouseMotion
             if (playerPos == null) {
                 playerPos = new Point(0, 0);
             }
+        } else if (selectedObject.equals("jumppad")) {
+            selectedJumppad = new Jumppad(0, 0, 50);
         }
     }
 

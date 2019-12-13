@@ -22,6 +22,8 @@ World$4.class
 GamePanel$1.class
 MainFrame$2.class
 Player.class
+Jumppad.class
+SelectionFrame$6.class
 World$2.class
 SelectionFrame$1.class
 Obstacle.class
@@ -29,4 +31,5 @@ SelectionFrame$4.class
 MapGeneratorPanel.class
 World$1.class
 MainFrame$4.class
+ObjectToDraw.class
 MainFrame.class

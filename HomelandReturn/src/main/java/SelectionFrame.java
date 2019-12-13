@@ -47,7 +47,7 @@ public class SelectionFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton4.setText("Ground");
+        jButton4.setText("Trashcan");
 
         jButton5.setText("Player position");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -56,7 +56,12 @@ public class SelectionFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton6.setText("No Creativity");
+        jButton6.setText("Jump Pad");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         jButton7.setText("Load Map");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
@@ -132,6 +137,11 @@ public class SelectionFrame extends javax.swing.JFrame {
         //Player Position-Button
         MapGeneratorPanel.setSelected("player");
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+        MapGeneratorPanel.setSelected("jumppad");
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
      * @param args the command line arguments
