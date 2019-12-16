@@ -29,6 +29,7 @@ public class MapGeneratorPanel extends javax.swing.JPanel implements MouseMotion
     static int start_my;
     static Obstacle selectedObstacle;
     static ArrayList<Obstacle> obstaclesOnMap;
+    static ArrayList<Jumppad> jumppadsOnMap;
     static Point playerPos;
     static String selected;
     static Jumppad selectedJumppad;
@@ -44,10 +45,15 @@ public class MapGeneratorPanel extends javax.swing.JPanel implements MouseMotion
         selectedObstacle = null;
         selectedJumppad = null;
         obstaclesOnMap = new ArrayList<>();
+        jumppadsOnMap = new ArrayList<>();
     }
     
     public static void setObstacles(ArrayList<Obstacle> loadedObstacles) {
         obstaclesOnMap = loadedObstacles;
+    }
+    
+    public static void setJumppads(ArrayList<Jumppad> loadedJumppads) {
+        jumppadsOnMap = loadedJumppads;
     }
     
     @Override
@@ -61,6 +67,12 @@ public class MapGeneratorPanel extends javax.swing.JPanel implements MouseMotion
         }
         if (selectedObstacle != null) {
             g.fillRect((int) selectedObstacle.x, (int) selectedObstacle.y, selectedObstacle.width, selectedObstacle.height);
+        }
+        for (int i = 0; i < jumppadsOnMap.size(); i++) {
+            g.fillRect((int) jumppadsOnMap.get(i).x, (int) jumppadsOnMap.get(i).y, jumppadsOnMap.get(i).width, jumppadsOnMap.get(i).height);
+        }
+        if (selectedJumppad != null) {
+            g.fillRect((int) selectedJumppad.x, (int) selectedJumppad.y, selectedJumppad.width, selectedJumppad.height);
         }
         if (playerPos != null) {
             g.setColor(Color.RED);
@@ -109,6 +121,8 @@ public class MapGeneratorPanel extends javax.swing.JPanel implements MouseMotion
         if (selectedObstacle != null && selected.equals("obstacle")) {
             selectedObstacle.width = mx - start_mx;
             selectedObstacle.height = my - start_my;
+        } else if (selectedJumppad != null && selected.equals("jumppad")) {
+            selectedJumppad.width = mx - start_mx;
         }
     }
 
@@ -127,6 +141,9 @@ public class MapGeneratorPanel extends javax.swing.JPanel implements MouseMotion
         if (selectedObstacle != null && selected.equals("obstacle")) {
             selectedObstacle.x = start_mx;
             selectedObstacle.y = start_my;
+        } else if (selectedJumppad != null && selected.equals("jumppad")) {
+            selectedJumppad.x = start_mx;
+            selectedJumppad.y = start_my;
         }
     }
 
@@ -142,6 +159,11 @@ public class MapGeneratorPanel extends javax.swing.JPanel implements MouseMotion
             selectedObstacle.height = 0;
         } else if (selected.equals("player")) {
             playerPos = new Point(mx, my);
+        } else if (selectedJumppad != null && selected.equals("jumppad")) {
+            selectedJumppad.width = mx - start_mx;
+            jumppadsOnMap.add(new Jumppad((int) selectedJumppad.x, (int) selectedJumppad.y, selectedJumppad.width));
+            selectedJumppad.width = 0;
+            selectedJumppad.height = 0;
         }
     }
 

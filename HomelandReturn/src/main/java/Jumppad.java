@@ -10,6 +10,8 @@
  */
 public class Jumppad extends ObjectToDraw {
     
+    static int force = -7;
+    
     public Jumppad(int x, int y, int width) {
         super(x, y, width, 10);
     }

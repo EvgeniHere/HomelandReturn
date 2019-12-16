@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 public class Generator {
     
     static ArrayList<Obstacle> loadingObstacles;
+    static ArrayList<Jumppad> loadingJumppads;
     static Point loadingPlayerPos;
     
     public static void GENCODE(String code) {
@@ -57,6 +58,7 @@ public class Generator {
         String code = Generator.LOADCODE();
         
         loadingObstacles = new ArrayList<>();
+        loadingJumppads = new ArrayList<>();
         
         String curObject = "";
         for (int i = 0; i + 1 < code.length(); i++) {
@@ -77,6 +79,8 @@ public class Generator {
                 length = 4;
             } else if (curObject.equals("playerPos")) {
                 length = 2;
+            } else if (curObject.equals("jumppads")) {
+                length = 3;
             }
             int[] info = new int[length];
             for (int j = 0; j < info.length; j++) {
@@ -88,12 +92,16 @@ public class Generator {
                 if (code.charAt(i) == ',') {
                     i++;
                 }
-                info[j] = (int) Integer.parseInt(num);
+                if (!num.equals("")) {
+                    info[j] = (int) Integer.parseInt(num);
+                }
             }
             if (curObject.equals("obstacles")) {
                 loadingObstacles.add(new Obstacle(info[0], info[1], info[2], info[3]));
             } else if (curObject.equals("playerPos")) {
                 loadingPlayerPos = new Point(info[0], info[1]);
+            } else if (curObject.equals("jumppads")) {
+                loadingJumppads.add(new Jumppad(info[0], info[1], info[2]));
             }
         }
     }
@@ -114,7 +122,18 @@ public class Generator {
         return loadingObstacles;
     }
     
-    public static String mapToData(ArrayList<Obstacle> obs, Point playerPos) {
+    public static ArrayList<Jumppad> getLoadedJumppads(int modifier) {
+        if (loadingJumppads == null) {
+            processData();
+        }
+        for (int i = 0; i < loadingJumppads.size(); i++) {
+            loadingJumppads.set(i, new Jumppad((int) loadingJumppads.get(i).x * modifier, (int) loadingJumppads.get(i).y * modifier, loadingJumppads.get(i).width * modifier));
+            loadingJumppads.get(i).height *= modifier;
+        }
+        return loadingJumppads;
+    }
+    
+    public static String mapToData(ArrayList<Obstacle> obs, Point playerPos, ArrayList<Jumppad> jumppads) {
         String info = "obstacles";
         for (int i = 0; i < obs.size(); i++) {
             Obstacle curObs = obs.get(i);
@@ -125,6 +144,11 @@ public class Generator {
             info += "playerPos;" + (int) playerPos.x + "," + (int) playerPos.y + ";";
         } else {
             info += "playerPos;" + 0 + "," + 0 + ";";
+        }
+        info += "jumppads";
+        for (int i = 0; i < jumppads.size(); i++) {
+            Jumppad curJumppad = jumppads.get(i);
+            info += ";" + (int) curJumppad.x + "," + (int) curJumppad.y + "," + (int) curJumppad.width + "," + (int) curJumppad.height;
         }
         return info;
     }
