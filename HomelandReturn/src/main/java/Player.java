@@ -39,7 +39,7 @@ public class Player {
     public static void setup() {
         size = new Point(GameFrame.WIDTH/25, 0);
         size.y = (int) ((double) (size.x));
-        pos = new FloatPoint(GameFrame.WIDTH/2 - size.x/2, 700);
+        pos = new FloatPoint(GameFrame.WIDTH/2 - size.x/2, 500);
         velY = 0;
         loaded = true;
         isFalling = false;

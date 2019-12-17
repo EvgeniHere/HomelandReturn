@@ -132,6 +132,7 @@ public class SelectionFrame extends javax.swing.JFrame {
         Generator.processData();
         MapGeneratorPanel.setObstacles(Generator.getLoadedObstacles(1));
         MapGeneratorPanel.setJumppads(Generator.getLoadedJumppads(1));
+        MapGeneratorPanel.setPlayerPos(Generator.getLoadedPlayerPos(1));
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed

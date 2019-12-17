@@ -17,37 +17,49 @@ import java.util.TimerTask;
  * @author evgen
  */
 public class World {
-    
     static ArrayList<Obstacle> obstacles = new ArrayList<>();
     static ArrayList<Jumppad> jumppads = new ArrayList<>();
     static int dir;
     static double gravity;
     static double velY;
     static double velX;
+    static int sizeModifier = 4;
+    static int maxHeight;
+    static Point firstMovePoint;
     
     static boolean loaded;
     
     static Point movePoint;
     
     public static void setup() {
-        //obstacles.add(new Obstacle(0, GameFrame.HEIGHT - GameFrame.HEIGHT / 15, GameFrame.WIDTH, 500));
-        
         while (!Player.loaded) {
             System.out.print("");
         }
         
-        /*for (int i = 0; i < 10; i++) {
-            obstacles.add(new Obstacle(i * 100, middlePoint.y + 100, 50, 50));
-        }*/
+        obstacles = Generator.getLoadedObstacles(sizeModifier);
+        jumppads = Generator.getLoadedJumppads(sizeModifier);
         
-        obstacles = Generator.getLoadedObstacles(2);
-        jumppads = Generator.getLoadedJumppads(2);
-        
-        movePoint = new Point(Generator.getLoadedPlayerPos(2));
+        movePoint = new Point(Generator.getLoadedPlayerPos(sizeModifier));
         movePoint.x *= -1;
         movePoint.y *= -1;
         movePoint.x += Player.pos.x;
         movePoint.y += Player.pos.y;
+        
+        firstMovePoint = new Point();
+        firstMovePoint.x = movePoint.x;
+        firstMovePoint.y = movePoint.y;
+        
+        for (int i = 0; i < obstacles.size(); i++) {
+            if (obstacles.get(i).y + obstacles.get(i).height > maxHeight) {
+                maxHeight = (int) obstacles.get(i).y + obstacles.get(i).height;
+            }
+        }
+        for (int i = 0; i < jumppads.size(); i++) {
+            if (jumppads.get(i).y + jumppads.get(i).height > maxHeight) {
+                maxHeight = (int) jumppads.get(i).y + jumppads.get(i).height;
+            }
+        }
+        maxHeight += 200;
         
         dir = 0;
         gravity = 0.09;
@@ -63,15 +75,16 @@ public class World {
             }
             movePoint.x -= velX;
         }
-        if (movePoint.y < -2000) {
-            movePoint.y = 2000;
+        if (movePoint.y < -maxHeight) {
+            movePoint.x = firstMovePoint.x;
+            movePoint.y = firstMovePoint.y;
         }
     }
     
     public static void jump() {
         if (isGroundCeilingObstacleAt(5)) {
             Player.desireToJump = true;
-            velY -= 6.0;
+            velY -= 8.0;
             Timer timer = new Timer();
             timer.schedule(new TimerTask(){
                 @Override
@@ -83,9 +96,11 @@ public class World {
     }
     
     public static void paintComponent(Graphics g) {
+        g.setColor(Color.BLACK);
         for (int i = 0; i < obstacles.size(); i++) {
             g.fillRect((int) obstacles.get(i).x, (int) obstacles.get(i).y, obstacles.get(i).width, obstacles.get(i).height);
         }
+        g.setColor(Color.GREEN);
         for (int i = 0; i < jumppads.size(); i++) {
             g.fillRect((int) jumppads.get(i).x, (int) jumppads.get(i).y, jumppads.get(i).width, jumppads.get(i).height);
         }
@@ -119,7 +134,7 @@ public class World {
     }
     
     public static void startTimer() {
-        for (int i = 1; i < 6; i++) {
+        for (int i = 1; i < 5; i++) {
             new Timer().schedule(new TimerTask(){
                 @Override
                 public void run() {

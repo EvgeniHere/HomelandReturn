@@ -50,7 +50,6 @@ public class Generator {
         catch (IOException e) {
             e.printStackTrace();
         }
- 
         return content;
     }
     

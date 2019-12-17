@@ -48,6 +48,10 @@ public class MapGeneratorPanel extends javax.swing.JPanel implements MouseMotion
         jumppadsOnMap = new ArrayList<>();
     }
     
+    public static void setPlayerPos(Point playerPoint) {
+        playerPos = playerPoint;
+    }
+    
     public static void setObstacles(ArrayList<Obstacle> loadedObstacles) {
         obstaclesOnMap = loadedObstacles;
     }
@@ -61,13 +65,14 @@ public class MapGeneratorPanel extends javax.swing.JPanel implements MouseMotion
         repaint();
         super.paintComponent(g);
         g.setColor(Color.BLACK);
-        
         for (int i = 0; i < obstaclesOnMap.size(); i++) {
             g.fillRect((int) obstaclesOnMap.get(i).x, (int) obstaclesOnMap.get(i).y, obstaclesOnMap.get(i).width, obstaclesOnMap.get(i).height);
         }
         if (selectedObstacle != null) {
             g.fillRect((int) selectedObstacle.x, (int) selectedObstacle.y, selectedObstacle.width, selectedObstacle.height);
         }
+        
+        g.setColor(Color.GREEN);
         for (int i = 0; i < jumppadsOnMap.size(); i++) {
             g.fillRect((int) jumppadsOnMap.get(i).x, (int) jumppadsOnMap.get(i).y, jumppadsOnMap.get(i).width, jumppadsOnMap.get(i).height);
         }
@@ -163,7 +168,6 @@ public class MapGeneratorPanel extends javax.swing.JPanel implements MouseMotion
             selectedJumppad.width = mx - start_mx;
             jumppadsOnMap.add(new Jumppad((int) selectedJumppad.x, (int) selectedJumppad.y, selectedJumppad.width));
             selectedJumppad.width = 0;
-            selectedJumppad.height = 0;
         }
     }
 
