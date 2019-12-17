@@ -108,8 +108,10 @@ public class World {
         for (int i = 0; i < jumppadsToDraw.size(); i++) {
             g.fillRect((int) jumppads.get(jumppadsToDraw.get(i)).x, (int) jumppads.get(jumppadsToDraw.get(i)).y, jumppads.get(jumppadsToDraw.get(i)).width, jumppads.get(jumppadsToDraw.get(i)).height);
         }
-        g.setColor(Color.RED);
-        g.fillRect(movePoint.x-5, movePoint.y-5, 10, 10);
+        if (movePoint != null) {
+            g.setColor(Color.RED);
+            g.fillRect(movePoint.x-5, movePoint.y-5, 10, 10);
+        }
         g.setColor(Color.BLACK);
     }
     
