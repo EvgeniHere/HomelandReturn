@@ -19,6 +19,8 @@ import java.util.TimerTask;
 public class World {
     static ArrayList<Obstacle> obstacles = new ArrayList<>();
     static ArrayList<Jumppad> jumppads = new ArrayList<>();
+    static ArrayList<Integer> obstaclesToDraw = new ArrayList<>();
+    static ArrayList<Integer> jumppadsToDraw = new ArrayList<>();
     static int dir;
     static double gravity;
     static double velY;
@@ -50,11 +52,13 @@ public class World {
         firstMovePoint.y = movePoint.y;
         
         for (int i = 0; i < obstacles.size(); i++) {
+            obstaclesToDraw.add(i);
             if (obstacles.get(i).y + obstacles.get(i).height > maxHeight) {
                 maxHeight = (int) obstacles.get(i).y + obstacles.get(i).height;
             }
         }
         for (int i = 0; i < jumppads.size(); i++) {
+            jumppadsToDraw.add(i);
             if (jumppads.get(i).y + jumppads.get(i).height > maxHeight) {
                 maxHeight = (int) jumppads.get(i).y + jumppads.get(i).height;
             }
@@ -69,7 +73,7 @@ public class World {
     }
     
     public static void move() {
-        if (!isSideObstacleAt((int) velX + dir)) {
+        if (!isSideObstacleAt((int) (velX / (Math.abs(velX)))*3)) {
             if (Math.abs(velX) < 3) {
                 velX += dir * Player.speed;
             }
@@ -97,12 +101,12 @@ public class World {
     
     public static void paintComponent(Graphics g) {
         g.setColor(Color.BLACK);
-        for (int i = 0; i < obstacles.size(); i++) {
-            g.fillRect((int) obstacles.get(i).x, (int) obstacles.get(i).y, obstacles.get(i).width, obstacles.get(i).height);
+        for (int i = 0; i < obstaclesToDraw.size(); i++) {
+            g.fillRect((int) obstacles.get(obstaclesToDraw.get(i)).x, (int) obstacles.get(obstaclesToDraw.get(i)).y, obstacles.get(obstaclesToDraw.get(i)).width, obstacles.get(obstaclesToDraw.get(i)).height);
         }
         g.setColor(Color.GREEN);
-        for (int i = 0; i < jumppads.size(); i++) {
-            g.fillRect((int) jumppads.get(i).x, (int) jumppads.get(i).y, jumppads.get(i).width, jumppads.get(i).height);
+        for (int i = 0; i < jumppadsToDraw.size(); i++) {
+            g.fillRect((int) jumppads.get(jumppadsToDraw.get(i)).x, (int) jumppads.get(jumppadsToDraw.get(i)).y, jumppads.get(jumppadsToDraw.get(i)).width, jumppads.get(jumppadsToDraw.get(i)).height);
         }
         g.setColor(Color.RED);
         g.fillRect(movePoint.x-5, movePoint.y-5, 10, 10);
@@ -161,16 +165,23 @@ public class World {
                 move();
             }
         }, 9, 4);
+        
+        new Timer().scheduleAtFixedRate(new TimerTask(){
+            @Override
+            public void run() {
+                updateArrayLists();
+            }
+        }, 2, 2);
     }
     
     public static void updatePositions() {
-        for (int i = 0; i < obstacles.size(); i++) {
-            obstacles.get(i).y = movePoint.y + obstacles.get(i).distFromMiddleY;
-            obstacles.get(i).x = movePoint.x + obstacles.get(i).distFromMiddleX;
+        for (int i = 0; i < obstaclesToDraw.size(); i++) {
+            obstacles.get(obstaclesToDraw.get(i)).y = movePoint.y + obstacles.get(obstaclesToDraw.get(i)).distFromMiddleY;
+            obstacles.get(obstaclesToDraw.get(i)).x = movePoint.x + obstacles.get(obstaclesToDraw.get(i)).distFromMiddleX;
         }
-        for (int i = 0; i < jumppads.size(); i++) {
-            jumppads.get(i).y = movePoint.y + jumppads.get(i).distFromMiddleY;
-            jumppads.get(i).x = movePoint.x + jumppads.get(i).distFromMiddleX;
+        for (int i = 0; i < jumppadsToDraw.size(); i++) {
+            jumppads.get(jumppadsToDraw.get(i)).y = movePoint.y + jumppads.get(jumppadsToDraw.get(i)).distFromMiddleY;
+            jumppads.get(jumppadsToDraw.get(i)).x = movePoint.x + jumppads.get(jumppadsToDraw.get(i)).distFromMiddleX;
         }
     }
     
@@ -187,10 +198,10 @@ public class World {
         int maxIndexY = (int) Player.pos.y + Player.size.y;
 
         for (int j = minIndexY; j < maxIndexY; j += 10) {
-            for (int k = 0; k < obstacles.size(); k++) {
-                int x = (int) obstacles.get(k).x;
-                int y = (int) obstacles.get(k).y;
-                if (xPos > x && xPos < x + obstacles.get(k).width && j > y && j < y + obstacles.get(k).height) {
+            for (int k = 0; k < obstaclesToDraw.size(); k++) {
+                int x = (int) obstacles.get(obstaclesToDraw.get(k)).x;
+                int y = (int) obstacles.get(obstaclesToDraw.get(k)).y;
+                if (xPos > x && xPos < x + obstacles.get(obstaclesToDraw.get(k)).width && j > y && j < y + obstacles.get(obstaclesToDraw.get(k)).height) {
                     return true;
                 }
             }
@@ -205,14 +216,14 @@ public class World {
             yPos += Player.size.y;
         }
         
-        int minIndexX = (int) Player.pos.x;
-        int maxIndexX = (int) Player.pos.x + Player.size.x;
+        int minIndexX = (int) Player.pos.x + Player.size.x/5;
+        int maxIndexX = (int) Player.pos.x + Player.size.x - Player.size.x/5;
 
         for (int j = minIndexX; j < maxIndexX; j += 10) {
-            for (int k = 0; k < obstacles.size(); k++) {
-                int x = (int) obstacles.get(k).x;
-                int y = (int) obstacles.get(k).y;
-                if (j > x && j < x + obstacles.get(k).width && yPos > y && yPos < y + obstacles.get(k).height) {
+            for (int k = 0; k < obstaclesToDraw.size(); k++) {
+                int x = (int) obstacles.get(obstaclesToDraw.get(k)).x;
+                int y = (int) obstacles.get(obstaclesToDraw.get(k)).y;
+                if (j > x && j < x + obstacles.get(obstaclesToDraw.get(k)).width && yPos > y && yPos < y + obstacles.get(obstaclesToDraw.get(k)).height) {
                     return true;
                 }
             }
@@ -231,14 +242,45 @@ public class World {
         int maxIndexX = (int) Player.pos.x + Player.size.x;
 
         for (int j = minIndexX; j < maxIndexX; j += 10) {
-            for (int k = 0; k < jumppads.size(); k++) {
-                int x = (int) jumppads.get(k).x;
-                int y = (int) jumppads.get(k).y;
-                if (j > x && j < x + jumppads.get(k).width && yPos > y && yPos < y + jumppads.get(k).height) {
+            for (int k = 0; k < jumppadsToDraw.size(); k++) {
+                int x = (int) jumppads.get(jumppadsToDraw.get(k)).x;
+                int y = (int) jumppads.get(jumppadsToDraw.get(k)).y;
+                if (j > x && j < x + jumppads.get(jumppadsToDraw.get(k)).width && yPos > y && yPos < y + jumppads.get(jumppadsToDraw.get(k)).height) {
                     return true;
                 }
             }
         }
         return false;
+    }
+    
+    public static void updateArrayLists() {
+        /*for (int i = 0; i < obstacles.size(); i++) {
+            boolean contains = obstaclesToDraw.contains((Object) i);
+            int x = (int) obstacles.get(i).x;
+            int y = (int) obstacles.get(i).y;
+            if (x + obstacles.get(i).width > 0 && x < GameFrame.WIDTH && y + obstacles.get(i).height > 0 && y < GameFrame.HEIGHT) {
+                if (!contains) {
+                    obstaclesToDraw.add(i);
+                }
+            } else {
+                if (contains) {
+                    obstaclesToDraw.remove((Object) i);
+                }
+            }
+        }
+        for (int i = 0; i < jumppads.size(); i++) {
+            boolean contains = jumppadsToDraw.contains((Object) i);
+            int x = (int) jumppads.get(i).x;
+            int y = (int) jumppads.get(i).y;
+            if (x + jumppads.get(i).width > 0 && x < GameFrame.WIDTH && y + jumppads.get(i).height > 0 && y < GameFrame.HEIGHT) {
+                if (!contains) {
+                    jumppadsToDraw.add(i);
+                }
+            } else {
+                if (contains) {
+                    jumppadsToDraw.remove((Object) i);
+                }
+            }
+        }*/
     }
 }
