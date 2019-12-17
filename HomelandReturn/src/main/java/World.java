@@ -119,7 +119,7 @@ public class World {
     }
     
     public static void startTimer() {
-        for (int i = 1; i < 4; i++) {
+        for (int i = 1; i < 6; i++) {
             new Timer().schedule(new TimerTask(){
                 @Override
                 public void run() {
