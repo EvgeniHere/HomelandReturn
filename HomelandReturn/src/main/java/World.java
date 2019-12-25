@@ -149,7 +149,7 @@ public class World {
                         public void run() {
                             updatePositions();
                         }
-                    }, 3, 3);
+                    }, 7, 3);
                 }
             }, i);
         }
@@ -186,8 +186,6 @@ public class World {
             jumppads.get(jumppadsToDraw.get(i)).x = movePoint.x + jumppads.get(jumppadsToDraw.get(i)).distFromMiddleX;
         }
     }
-    
-    
     
     public static boolean isSideObstacleAt(int xPos) {
         xPos += Player.pos.x;
